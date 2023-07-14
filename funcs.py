@@ -81,8 +81,11 @@ def nicer_answer(answer):
     nice_answer = ""
     for term in answer:
         coeff, power = term
-        if coeff.is_integer():
-            coeff = int(coeff)
+        try:
+            if coeff.is_integer():
+                coeff = int(coeff)
+        except:
+            pass
         if coeff == 0:
             # No term of the current order - placeholder so don't output
             continue
@@ -115,3 +118,12 @@ def nicer_answer(answer):
         # Placeholder
         nice_answer = "0"
     return nice_answer
+
+def substitute(terms, val):
+    # Sub in a value of x
+    total = 0
+    for term in terms:
+        coeff = term[0]
+        power = term[1]
+        total += coeff * (val ** power)
+    return total
