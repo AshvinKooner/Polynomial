@@ -29,7 +29,16 @@ def parse_terms(terms):
                 # Without a power
                 split = "x"
             coeff, power = term.split(split)
-            coeff = int(coeff) if len(coeff) > 0 else 1
+            if coeff == "-":
+                # Negative - no digit present
+                coeff = -1
+            elif len(coeff) > 0:
+                # Digit(s) present
+                coeff = int(coeff)
+            else:
+                # Positive - no digit present
+                coeff = 1
+            #coeff = int(coeff) if len(coeff) > 0 else 1
             power = int(power) if len(power) > 0 else 1
             parsed_terms.append((coeff, power))
         else:
@@ -178,5 +187,5 @@ def nicer_answer(answer):
         nice_answer = "0"
     return nice_answer
 
-print(nicer_answer(answer))
+print("answer:", nicer_answer(answer))
 print("remainder:", nicer_answer(remainder))
