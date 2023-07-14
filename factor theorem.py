@@ -21,7 +21,7 @@ total = 0
 for term in expression:
     coeff = term[0]
     power = term[1]
-    total += coeff * (solution**power)
+    total += coeff * (solution ** power)
 
 if total == 0:
     print("It is a factor")
