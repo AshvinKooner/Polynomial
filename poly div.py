@@ -1,4 +1,4 @@
-import re
+from funcs import get_expr, normalise, nicer_answer
 
 # def get_expression(highest_degree : int):
 #     expr = []
@@ -12,59 +12,6 @@ import re
 #         expr.append((int(input(msg)), i))
 #     return expr
 
-def extract_terms(expr_str):
-    # Divide expression into terms
-    patterns = ["[-]?[\d]{0,}x\\^[\d]{1,}", "[-]?[\d]{0,}x", "[-]?[\d]{1,}"]
-    terms = re.findall("|".join(patterns), expr_str)
-    return terms
-
-def parse_terms(terms):
-    parsed_terms = []
-    for term in terms:
-        if "x" in term:
-            if "^" in term:
-                # Power of x
-                split = "x^"
-            else:
-                # Without a power
-                split = "x"
-            coeff, power = term.split(split)
-            if coeff == "-":
-                # Negative - no digit present
-                coeff = -1
-            elif len(coeff) > 0:
-                # Digit(s) present
-                coeff = int(coeff)
-            else:
-                # Positive - no digit present
-                coeff = 1
-            #coeff = int(coeff) if len(coeff) > 0 else 1
-            power = int(power) if len(power) > 0 else 1
-            parsed_terms.append((coeff, power))
-        else:
-            # Term is just a constant
-            parsed_terms.append((int(term), 0))
-    return parsed_terms
-
-
-def get_expr():
-    valid = False
-    while not valid:
-        expr_str = input("Enter expression (in form ax^n except for x and constant):\n").replace(" ", "")
-        terms = extract_terms(expr_str)
-        # Validate input
-        length = 0
-        for term in terms:
-            length += len(term)
-        #print(terms)
-        #print(length, len(expr_str))
-        expr_str = expr_str.replace("+", "")
-        if length == len(expr_str):
-            valid = True
-        else:
-            print("Please enter valid input of the form ax^n except for x^1 and constant")
-    parsed_terms = parse_terms(terms)
-    return parsed_terms
 
 def divide_terms(dividend, divisor):
     coeff1, power1 = dividend
@@ -103,13 +50,6 @@ def sub_terms(term1, term2):
     new_coeff = coeff1 - coeff2
     return (new_coeff, power1)
 
-def get_order(terms):
-    # Find highest power in expression given as list of tuples (coeff, power)
-    powers = []
-    for term in terms:
-        powers.append(term[1])
-    return max(powers)
-
 def sub_expr(expr1, expr2):
     # Given 2 lists of (coeff, power) will do expr1 - expr2. Both must be same size and powers lined up.
     answer = []
@@ -125,7 +65,9 @@ def mult_expr(expr, term):
     return answer
 
 def poly_divide(dividend, divisor):
-    print(dividend)
+    #print(dividend)
+    dividend = normalise(dividend)
+    divisor = normalise(divisor)
     answer = []
     answer.append(divide_terms(dividend[0], divisor[0]))
     # Highest power of divisor
@@ -152,40 +94,6 @@ divisor = get_expr()
 #print(poly_divide(dividend, divisor))
 answer, remainder = poly_divide(dividend, divisor)
 #print(answer)
-
-
-def nicer_answer(answer):
-    nice_answer = ""
-    for term in answer:
-        coeff, power = term
-        if coeff.is_integer():
-            coeff = int(coeff)
-        if coeff == 0:
-            # No term of the current order - placeholder so don't output
-            continue
-        elif coeff < 0:
-            # Deal with negatives
-            coeffstr = f" - {-coeff if coeff < -1 else ''}"
-        else:
-            # Deal with positives
-            coeffstr = f" + {coeff if coeff > 1 else ''}"
-        if power == 0:
-            # Term is just a constant
-            x = ""
-        elif power == 1:
-            # Just x
-            x = "x"
-        else:
-            # A power of x
-            x = f"x^{power}"
-        nice_answer += f"{coeffstr}{x}"
-    if nice_answer[0:3] == " + ":
-        # Remove leading +, not needed
-        nice_answer = nice_answer[3:]
-    if nice_answer == "":
-        # Placeholder
-        nice_answer = "0"
-    return nice_answer
 
 print("answer:", nicer_answer(answer))
 print("remainder:", nicer_answer(remainder))
