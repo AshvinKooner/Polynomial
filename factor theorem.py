@@ -1,4 +1,4 @@
-from funcs import get_expr, get_order
+from funcs import get_expr, get_order, substitute
 
 # Get main expression (test if factor of this)
 print("****Expression****")
@@ -17,14 +17,10 @@ solution = -(factor[1][0] / factor[0][0])
 #print(solution)
 
 # Test this solution in the expression
-total = 0
-for term in expression:
-    coeff = term[0]
-    power = term[1]
-    total += coeff * (solution ** power)
+rem = substitute(expression, solution)
 
-if total == 0:
+if rem == 0:
     print("It is a factor")
 else:
-    print("Not a factor. Remainder:", total)
+    print("Not a factor. Remainder:", rem)
 
