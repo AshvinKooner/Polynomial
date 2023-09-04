@@ -1,3 +1,3 @@
 # Polynomial
 
-DIVIDE POLYNOMIALS.
+DIVIDE POLYNOMIALS. and more
